@@ -30,6 +30,31 @@ export const APPOINTMENT_STATUS = {
 export type AppointmentStatus =
   (typeof APPOINTMENT_STATUS)[keyof typeof APPOINTMENT_STATUS];
 
+export const PAYMENT_METHODS = {
+  CASH: "CASH",
+  CARD: "CARD",
+  PSE: "PSE",
+  NEQUI: "NEQUI",
+  DAVIPLATA: "DAVIPLATA",
+} as const;
+
+export type PaymentMethod = (typeof PAYMENT_METHODS)[keyof typeof PAYMENT_METHODS];
+
+export const PAYMENT_METHOD_LABELS: Record<string, string> = {
+  CASH: "Efectivo",
+  CARD: "Tarjeta",
+  PSE: "PSE",
+  NEQUI: "Nequi",
+  DAVIPLATA: "Daviplata",
+};
+
+export const APPOINTMENT_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pendiente",
+  CONFIRMED: "Confirmada",
+  COMPLETED: "Completada",
+  CANCELLED: "Cancelada",
+};
+
 export function isRole(value: string): value is Role {
   return (
     value === ROLES.CLIENT ||

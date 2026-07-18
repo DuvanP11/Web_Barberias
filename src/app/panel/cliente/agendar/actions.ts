@@ -5,6 +5,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireRole, ROLES, APPOINTMENT_STATUS } from "@/lib/rbac";
 import { isSlotFree } from "@/lib/booking";
+import { notifyAppointmentConfirmed } from "@/lib/notify";
 
 const schema = z.object({
   locationId: z.string().min(1),
@@ -75,6 +76,8 @@ export async function submitBooking(_prev: BookingState, formData: FormData): Pr
     });
     // Fidelización: +10 puntos por agendar.
     await prisma.user.update({ where: { id: session.uid }, data: { points: { increment: 10 } } });
+    // Notificación de confirmación (degrada a registro si no hay proveedor).
+    await notifyAppointmentConfirmed(session.email, session.name ?? "cliente", service.name, start);
   }
 
   redirect("/panel/cliente/citas?ok=1");

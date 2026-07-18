@@ -53,29 +53,23 @@ const CLIENT_NAV: NavItem[] = [
 
 const BARBER_NAV: NavItem[] = [
   { label: "Inicio", icon: LayoutDashboard, href: "/panel/barbero" },
-  { label: "Agenda diaria", icon: CalendarDays, href: soon("Agenda diaria", "Fase 3"), phase: "Fase 3" },
-  { label: "Próximas citas", icon: CalendarClock, href: soon("Próximas citas", "Fase 3"), phase: "Fase 3" },
-  { label: "Ingresos", icon: Wallet, href: soon("Ingresos", "Fase 3"), phase: "Fase 3" },
-  { label: "Comisiones", icon: Percent, href: soon("Comisiones", "Fase 3"), phase: "Fase 3" },
-  { label: "Clientes frecuentes", icon: Users, href: soon("Clientes frecuentes", "Fase 3"), phase: "Fase 3" },
-  { label: "Disponibilidad", icon: Clock, href: soon("Disponibilidad", "Fase 3"), phase: "Fase 3" },
-  { label: "Estadísticas", icon: BarChart3, href: soon("Estadísticas", "Fase 3"), phase: "Fase 3" },
+  { label: "Agenda", icon: CalendarDays, href: "/panel/barbero/agenda" },
+  { label: "Ingresos y comisiones", icon: Wallet, href: "/panel/barbero/ingresos" },
+  { label: "Clientes frecuentes", icon: Users, href: "/panel/barbero/clientes" },
   { label: "Perfil", icon: User, href: "/panel/perfil" },
 ];
 
 const ADMIN_MODULES: NavItem[] = [
-  { label: "Usuarios", icon: Users, href: soon("Usuarios", "Fase 4"), phase: "Fase 4" },
-  { label: "Personal", icon: UserCog, href: soon("Personal", "Fase 4"), phase: "Fase 4" },
-  { label: "Sedes", icon: MapPin, href: soon("Sedes", "Fase 4"), phase: "Fase 4" },
-  { label: "Servicios", icon: Scissors, href: soon("Servicios", "Fase 4"), phase: "Fase 4" },
-  { label: "Citas", icon: CalendarDays, href: soon("Citas", "Fase 4"), phase: "Fase 4" },
-  { label: "Clientes", icon: UserRound, href: soon("Clientes", "Fase 4"), phase: "Fase 4" },
-  { label: "Financiero", icon: Wallet, href: soon("Financiero", "Fase 4"), phase: "Fase 4" },
-  { label: "Comisiones", icon: Percent, href: soon("Comisiones", "Fase 4"), phase: "Fase 4" },
-  { label: "Estadísticas", icon: BarChart3, href: soon("Estadísticas", "Fase 4"), phase: "Fase 4" },
-  { label: "Multimedia", icon: ImageIcon, href: soon("Multimedia", "Fase 4"), phase: "Fase 4" },
-  { label: "Reportes", icon: FileText, href: soon("Reportes", "Fase 4"), phase: "Fase 4" },
-  { label: "Configuración", icon: Settings, href: soon("Configuración", "Fase 4"), phase: "Fase 4" },
+  { label: "Citas", icon: CalendarDays, href: "/panel/admin/citas" },
+  { label: "Servicios", icon: Scissors, href: "/panel/admin/servicios" },
+  { label: "Sedes", icon: MapPin, href: "/panel/admin/sedes" },
+  { label: "Personal", icon: UserCog, href: "/panel/admin/usuarios" },
+  { label: "Clientes", icon: UserRound, href: "/panel/admin/clientes" },
+  { label: "Comisiones", icon: Percent, href: "/panel/admin/comisiones" },
+  { label: "Financiero", icon: Wallet, href: "/panel/admin/financiero" },
+  { label: "Reportes", icon: FileText, href: "/panel/admin/reportes" },
+  { label: "Multimedia", icon: ImageIcon, href: soon("Multimedia", "Fase 5"), phase: "Fase 5" },
+  { label: "Configuración", icon: Settings, href: "/panel/admin/configuracion" },
 ];
 
 const ADMIN_NAV: NavItem[] = [
@@ -87,8 +81,6 @@ const ADMIN_NAV: NavItem[] = [
 const OWNER_NAV: NavItem[] = [
   { label: "Inicio", icon: LayoutDashboard, href: "/panel/dueno" },
   ...ADMIN_MODULES,
-  { label: "Comparativo de sedes", icon: GitCompare, href: soon("Comparativo de sedes", "Fase 4"), phase: "Fase 4" },
-  { label: "Administradores", icon: ShieldCheck, href: soon("Administradores", "Fase 4"), phase: "Fase 4" },
   { label: "Perfil", icon: User, href: "/panel/perfil" },
 ];
 

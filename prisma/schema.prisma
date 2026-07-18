@@ -37,6 +37,8 @@ model Tenant {
   barbers      BarberProfile[]
   appointments Appointment[]
   reviews      Review[]
+  payments     Payment[]
+  expenses     Expense[]
 }
 
 /// Usuario del sistema. `role` = CLIENT | BARBER | ADMIN | OWNER (ver rbac.ts).
@@ -86,6 +88,7 @@ model Location {
   updatedAt DateTime @updatedAt
 
   appointments Appointment[]
+  expenses     Expense[]
 
   @@index([tenantId])
 }
@@ -160,6 +163,8 @@ model Appointment {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  payment Payment?
+
   @@index([tenantId])
   @@index([barberId, startAt])
   @@index([clientId])
@@ -178,6 +183,39 @@ model Review {
   comment   String?
   approved  Boolean       @default(false)
   createdAt DateTime      @default(now())
+
+  @@index([tenantId])
+}
+
+/// Pago de una cita (o registro manual por la barbería).
+/// `method` = CARD | PSE | NEQUI | DAVIPLATA | CASH.  `status` = PENDING | PAID | FAILED.
+model Payment {
+  id            String       @id @default(cuid())
+  tenantId      String
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  appointmentId String?      @unique
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  method        String
+  amountCents   Int
+  status        String       @default("PAID")
+  reference     String? // comprobante / referencia de la pasarela
+  createdAt     DateTime     @default(now())
+
+  @@index([tenantId])
+}
+
+/// Egreso / gasto del negocio.
+model Expense {
+  id          String    @id @default(cuid())
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locationId  String?
+  location    Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  concept     String
+  category    String?
+  amountCents Int
+  date        DateTime  @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([tenantId])
 }
