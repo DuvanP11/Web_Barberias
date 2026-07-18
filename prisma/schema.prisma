@@ -120,8 +120,14 @@ model BarberProfile {
   specialty       String?
   experienceYears Int?
   bio             String?
+  studies         String?
+  certifications  String? // separadas por " | "
+  languages       String? // separados por ", "
+  instagram       String?
+  goals           String?
   rating          Float    @default(0)
   totalCuts       Int      @default(0)
+  clientsServed   Int      @default(0)
   commissionPct   Int      @default(50) // % de comisión por servicio
   active          Boolean  @default(true)
   createdAt       DateTime @default(now())

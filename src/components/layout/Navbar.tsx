@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/", label: "Inicio" },
   { href: "/#servicios", label: "Servicios" },
-  { href: "/#nosotros", label: "Nosotros" },
+  { href: "/barberos", label: "Barberos" },
+  { href: "/portafolio", label: "Portafolio" },
+  { href: "/#sedes", label: "Sedes" },
   { href: "/#contacto", label: "Contacto" },
 ];
 

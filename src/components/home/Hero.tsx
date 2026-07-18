@@ -9,7 +9,7 @@ import {
   useTransform,
   useReducedMotion,
 } from "motion/react";
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Star, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { useTheme } from "@/components/theme/ThemeProvider";
@@ -142,7 +142,10 @@ export function Hero() {
 
           <motion.div variants={item} className="mt-8 flex flex-wrap items-center gap-3">
             <Button href="/cotizar" variant="primary" size="lg">
-              Agendar una cita <ArrowRight className="h-4 w-4" />
+              Agendar cita <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button href="/barberos" variant="outline" size="lg">
+              <Users className="h-4 w-4" /> Conocer nuestros barberos
             </Button>
             <Button href={buildWhatsAppUrl(quickQuoteMessage())} external variant="whatsapp" size="lg">
               <WhatsAppIcon className="h-5 w-5" />
