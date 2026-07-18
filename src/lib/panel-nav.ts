@@ -3,7 +3,6 @@ import {
   CalendarDays,
   CalendarPlus,
   CalendarClock,
-  History,
   Gift,
   Share2,
   ClipboardList,
@@ -44,12 +43,11 @@ function soon(label: string, phase: string): string {
 
 const CLIENT_NAV: NavItem[] = [
   { label: "Inicio", icon: LayoutDashboard, href: "/panel/cliente" },
-  { label: "Mis citas", icon: CalendarDays, href: soon("Mis citas", "Fase 2"), phase: "Fase 2" },
-  { label: "Agendar", icon: CalendarPlus, href: soon("Agendar", "Fase 2"), phase: "Fase 2" },
-  { label: "Historial", icon: History, href: soon("Historial", "Fase 2"), phase: "Fase 2" },
-  { label: "Fidelización", icon: Gift, href: soon("Fidelización", "Fase 2"), phase: "Fase 2" },
-  { label: "Referidos", icon: Share2, href: soon("Referidos", "Fase 2"), phase: "Fase 2" },
-  { label: "Asesoría", icon: ClipboardList, href: soon("Asesoría", "Fase 2"), phase: "Fase 2" },
+  { label: "Agendar", icon: CalendarPlus, href: "/panel/cliente/agendar" },
+  { label: "Mis citas", icon: CalendarDays, href: "/panel/cliente/citas" },
+  { label: "Fidelización", icon: Gift, href: "/panel/cliente/fidelizacion" },
+  { label: "Referidos", icon: Share2, href: "/panel/cliente/referidos" },
+  { label: "Asesoría", icon: ClipboardList, href: "/panel/cliente/asesoria" },
   { label: "Perfil", icon: User, href: "/panel/perfil" },
 ];
 
