@@ -55,16 +55,19 @@ npm run dev                  # http://localhost:3000
   apunta `DATABASE_URL` a Neon (u otro Postgres). El esquema es portable: no usa
   enums nativos (los roles/estados son String validados en `src/lib/roles.ts`).
 
-## Roadmap (fases siguientes)
+## Estado por fases (todas implementadas)
 - **Fase 1 — Público**: servicios con precio/duración desde BD, sedes,
-  portafolio con filtros, páginas públicas de barberos, reseñas, galería con video.
+  portafolio con filtros, páginas públicas de barberos, reseñas, galería. ✅
 - **Fase 2 — Cliente**: perfil editable, historial, agendamiento con
-  disponibilidad en tiempo real, asesoría, fidelización, referidos.
-- **Fase 3 — Barbero**: agenda, ingresos, comisiones, estadísticas.
-- **Fase 4 — Admin/Dueño**: gestión de usuarios/sedes/servicios/citas,
-  financiero, comisiones, dashboard con gráficos, reportes, configuración.
-- **Fase 5 — Pagos + Notificaciones**: Stripe/Mercado Pago/PSE/Nequi;
-  correo/WhatsApp/push.
+  disponibilidad en tiempo real, asesoría, fidelización, referidos. ✅
+- **Fase 3 — Barbero**: agenda (completar/cancelar), ingresos, comisiones,
+  clientes frecuentes, estadísticas. ✅
+- **Fase 4 — Admin/Dueño**: dashboard con gráficos y tops, comparativo de sedes,
+  CRUD de citas/servicios/sedes/personal, clientes, comisiones, financiero,
+  reportes CSV, configuración. ✅
+- **Fase 5 — Pagos + Notificaciones**: registro de pago por método + comprobante
+  imprimible; notificaciones con degradación elegante. ✅ (pasarelas reales
+  Stripe/Mercado Pago y envío real de email/WhatsApp/push requieren credenciales).
 
 ## Personalización
 - `src/lib/site-config.ts` — datos del negocio de la landing.
