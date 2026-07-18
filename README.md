@@ -1,48 +1,72 @@
-# Web Barberías — Plantilla base
+# Web Barberías — Plataforma SaaS
 
-Plantilla web de negocio en **Next.js 16 + Tailwind v4**, lista para convertirse
-en la página de una barbería (o cualquier negocio de servicios con cita).
+Aplicación web para barberías en **Next.js 16 (full-stack) + Tailwind v4 +
+Prisma**, con arquitectura **multi-tenant** (una instalación administra varias
+barberías) y **control de acceso por roles (RBAC)**.
 
-Es una **plantilla neutra**: conserva el sistema de diseño (temas claro/oscuro +
-5 acentos, animaciones, componentes) pero sin marca, sin fotos, sin roles de
-acceso y sin datos de ningún negocio en particular.
+Se construye por fases. Hoy están listos el **sitio público** (landing con 4
+estilos visuales) y la **Fundación SaaS** (base de datos, autenticación y
+paneles por rol). Los módulos de negocio se conectan sobre esa base.
 
-## Qué incluye
+## Qué incluye hoy
 
-- **Home** de una sola página: Hero, barra de confianza, Servicios, ¿Por qué
+### Sitio público
+- **Home**: Hero con foto por estilo + parallax, Servicios (con fotos), ¿Por qué
   elegirnos?, Proceso, Nosotros, Referencias/galería y CTA final.
-- **Agendar** (`/cotizar`): formulario que arma un mensaje y abre WhatsApp con
-  los datos prellenados (sin base de datos).
-- **Temas en vivo**: modo claro/oscuro y 5 colores de acento, elegibles por el
-  visitante desde la barra superior. Se guardan en el navegador.
-- **Navbar**, **Footer** (con mapa), **WhatsApp flotante** y **fondo animado**.
-- Metadata/SEO, `robots.ts`, `sitemap.ts` e icono.
+- **Agendar** (`/cotizar`): formulario que arma un mensaje y abre WhatsApp.
+- **Estilos en vivo** (botón "Estilo"): **Premium**, **Clásico**, **Urbano** y
+  **Minimalista** — cada uno reescribe tipografía, colores, superficies, fondo y
+  motivos (atributo `data-style` + bloques en `globals.css`). Más modo claro/oscuro.
+- Navbar, Footer con mapa, WhatsApp flotante, fondo animado, SEO.
+
+### Fundación SaaS
+- **Base de datos multi-tenant** (Prisma): `Tenant` (barbería), `User`,
+  `Location` (sede), `Service`, `BarberProfile`, `Appointment`, `Review` y tokens.
+  Todo cuelga de un `tenantId` (aislamiento entre negocios).
+- **Autenticación**: registro, login y logout con sesión firmada (HMAC, cookie
+  httpOnly), contraseñas con scrypt. Recuperación de contraseña (interfaz).
+- **RBAC — 4 roles**: `CLIENT`, `BARBER`, `ADMIN`, `OWNER`. Cada rol tiene su
+  panel en `/panel/*`, protegido en el servidor (`requireRole`).
+- **Esqueleto de paneles** (`/panel`): shell con sidebar por rol y el mapa
+  completo de módulos; los pendientes muestran su fase.
 
 ## Cómo correrlo
 
 ```bash
-npm install
-npm run dev      # http://localhost:3000
-npm run build    # verifica el build de producción
+npm install                 # instala y genera el cliente Prisma
+cp .env.example .env         # o usa el .env incluido (SQLite de desarrollo)
+npm run db:push              # crea la base SQLite (prisma/dev.db)
+npm run db:seed              # siembra la barbería demo y las 4 cuentas
+npm run dev                  # http://localhost:3000
 ```
 
-## Cómo personalizarlo (lo mínimo)
+### Cuentas de demostración (contraseña: `demo1234`)
+| Rol | Correo |
+|---|---|
+| Dueño | `dueno@barberiaimperio.com` |
+| Administrador | `admin@barberiaimperio.com` |
+| Barbero | `barbero@barberiaimperio.com` |
+| Cliente | `cliente@barberiaimperio.com` |
 
-1. **`src/lib/site-config.ts`** — el ÚNICO archivo con datos del negocio: nombre,
-   WhatsApp, correo, dirección, horario, redes y la lista de **servicios**.
-2. **Fotos** — hoy hay marcos "Espacio para foto" y "Foto próximamente" en Hero,
-   Nosotros, Servicios y la galería. Reemplázalos por `<Image/>` cuando tengas el
-   material (los dominios remotos permitidos se configuran en `next.config.ts`).
-3. **Textos** — los marcadores de posición viven dentro de cada sección en
-   `src/components/home/`.
-4. **Color de marca** — el acento por defecto es "morado"; se cambia en el
-   `@theme` de `src/app/globals.css` o desde el selector de tema.
+## Base de datos: dev vs producción
 
-## Qué NO trae (a propósito)
+- **Desarrollo**: SQLite (`provider = "sqlite"`), corre sin infraestructura.
+- **Producción**: cambia el provider a `postgresql` en `prisma/schema.prisma` y
+  apunta `DATABASE_URL` a Neon (u otro Postgres). El esquema es portable: no usa
+  enums nativos (los roles/estados son String validados en `src/lib/roles.ts`).
 
-- Panel de administración, login ni roles de acceso.
-- Base de datos / Prisma.
-- Carrito ni catálogo con configurador.
+## Roadmap (fases siguientes)
+- **Fase 1 — Público**: servicios con precio/duración desde BD, sedes,
+  portafolio con filtros, páginas públicas de barberos, reseñas, galería con video.
+- **Fase 2 — Cliente**: perfil editable, historial, agendamiento con
+  disponibilidad en tiempo real, asesoría, fidelización, referidos.
+- **Fase 3 — Barbero**: agenda, ingresos, comisiones, estadísticas.
+- **Fase 4 — Admin/Dueño**: gestión de usuarios/sedes/servicios/citas,
+  financiero, comisiones, dashboard con gráficos, reportes, configuración.
+- **Fase 5 — Pagos + Notificaciones**: Stripe/Mercado Pago/PSE/Nequi;
+  correo/WhatsApp/push.
 
-Todo eso puede añadirse después; esta base está pensada para publicar rápido una
-landing y crecer desde ahí.
+## Personalización
+- `src/lib/site-config.ts` — datos del negocio de la landing.
+- `src/lib/theme.ts` + `globals.css` — estilos visuales y paletas.
+- Imágenes en `public/hero`, `public/cortes`, `public/nosotros`.

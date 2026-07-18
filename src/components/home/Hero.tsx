@@ -1,19 +1,37 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Sparkles, Star, ImageIcon } from "lucide-react";
+import { useRef } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "motion/react";
+import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { siteConfig } from "@/lib/site-config";
 import { buildWhatsAppUrl, quickQuoteMessage } from "@/lib/whatsapp";
+import type { StyleId } from "@/lib/theme";
 
 /**
- * HERO — sin foto (plantilla). El fondo lo pone <AnimatedBackground/> del layout.
+ * HERO — foto de fondo a sangre completa que CAMBIA según el estilo activo, con
+ * PARALLAX interactivo: la imagen se desplaza suavemente con el cursor (en
+ * sentido contrario) y el contenido, levemente a favor; además respira con un
+ * zoom lento (Ken Burns). Todo se desactiva con `prefers-reduced-motion`.
  *
- * Cuando tengas la imagen del negocio, reemplaza el panel derecho "Espacio para
- * foto" por un <Image/> a sangre o dentro del marco. El texto sale de
- * site-config y de los marcadores de posición de aquí.
+ * Imágenes en /public/hero (alta resolución). El overlay usa el token `ink`, así
+ * que se oscurece en los estilos oscuros y se aclara en minimalista (modo claro).
  */
+const HERO_IMAGES: Record<StyleId, string> = {
+  premium: "/hero/premium.jpg",
+  clasico: "/hero/clasico.jpg",
+  urbano: "/hero/urbano.jpg",
+  minimalista: "/hero/minimalista.jpg",
+};
 
 const container = {
   hidden: {},
@@ -25,16 +43,80 @@ const item = {
 };
 
 export function Hero() {
+  const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const { style } = useTheme();
+  const heroImage = HERO_IMAGES[style] ?? HERO_IMAGES.premium;
+
+  // Posición normalizada del cursor dentro del hero (-0.5 … 0.5).
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 55, damping: 18, mass: 0.4 });
+  const sy = useSpring(my, { stiffness: 55, damping: 18, mass: 0.4 });
+
+  // La foto se desplaza en sentido contrario al cursor; el contenido, a favor.
+  const imgX = useTransform(sx, [-0.5, 0.5], [28, -28]);
+  const imgY = useTransform(sy, [-0.5, 0.5], [20, -20]);
+  const contentX = useTransform(sx, [-0.5, 0.5], [-12, 12]);
+  const contentY = useTransform(sy, [-0.5, 0.5], [-7, 7]);
+
+  function handleMove(e: React.MouseEvent) {
+    if (reduce || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width - 0.5);
+    my.set((e.clientY - r.top) / r.height - 0.5);
+  }
+  function handleLeave() {
+    mx.set(0);
+    my.set(0);
+  }
 
   return (
-    <section className="relative isolate flex min-h-[92vh] items-center overflow-hidden">
-      {/* Realce superior para legibilidad de la barra */}
-      <div className="absolute inset-x-0 top-0 z-0 h-32 bg-gradient-to-b from-ink/85 to-transparent" />
+    <section
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      className="relative isolate flex min-h-[92vh] items-center overflow-hidden"
+    >
+      {/* Capa de foto (parallax + Ken Burns), cambia con el estilo */}
+      <motion.div style={reduce ? undefined : { x: imgX, y: imgY }} className="absolute inset-0 z-0">
+        <motion.div
+          key={heroImage}
+          className="absolute inset-[-7%]"
+          initial={{ opacity: 0 }}
+          animate={reduce ? { opacity: 1 } : { opacity: 1, scale: [1.06, 1.14, 1.06] }}
+          transition={{
+            opacity: { duration: 0.6 },
+            scale: { duration: 26, repeat: Infinity, ease: "easeInOut" },
+          }}
+        >
+          <Image
+            src={heroImage}
+            alt={`Interior de ${siteConfig.name}`}
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover"
+          />
+        </motion.div>
+      </motion.div>
 
-      <div className="container-app relative z-10 grid w-full items-center gap-12 pb-16 pt-32 md:pt-40 lg:grid-cols-[1.1fr_0.9fr]">
-        {/* Contenido */}
+      {/* Overlays para legibilidad (usan `ink`: oscuro en estilos oscuros, claro
+          en minimalista). Fuertes a la izquierda, sueltan la foto a la derecha. */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-ink via-ink/75 to-ink/20" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
+      <div className="absolute inset-x-0 top-0 z-0 h-32 bg-gradient-to-b from-ink/80 to-transparent" />
+
+      {/* Contenido */}
+      <motion.div
+        style={reduce ? undefined : { x: contentX, y: contentY }}
+        className="container-app relative z-10 w-full pb-16 pt-32 md:pt-40"
+      >
         <motion.div variants={container} initial="hidden" animate="visible" className="max-w-2xl">
+          {/* Motivo de poste de barbería (solo visible en el estilo Clásico) */}
+          <div className="barber-pole mb-6 w-28" />
+
           <motion.span
             variants={item}
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-medium text-cloud backdrop-blur"
@@ -47,15 +129,14 @@ export function Hero() {
             variants={item}
             className="mt-6 font-display text-4xl font-semibold leading-[1.03] tracking-tight text-cloud drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)] sm:text-5xl md:text-6xl lg:text-7xl"
           >
-            Un titular potente,
+            Tu mejor versión
             <br />
-            <span className="text-gradient-morado">que enamore a tu cliente.</span>
+            <span className="text-gradient-morado">empieza por un buen corte.</span>
           </motion.h1>
 
           <motion.p variants={item} className="mt-6 max-w-xl text-lg leading-relaxed text-cloud/85">
-            Aquí va un párrafo breve que explique qué hace{" "}
-            <span className="text-cloud">{siteConfig.name}</span> y por qué elegirlo. Dos o tres
-            líneas bastan.{" "}
+            En <span className="text-cloud">{siteConfig.name}</span> unimos la barbería clásica con
+            las tendencias de hoy: cortes, barba y afeitado a navaja, con la atención que mereces.{" "}
             <span className="italic text-morado-light">“{siteConfig.tagline}”.</span>
           </motion.p>
 
@@ -83,24 +164,7 @@ export function Hero() {
             </p>
           </motion.div>
         </motion.div>
-
-        {/* Panel derecho — marcador de posición para la foto principal */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative hidden lg:block"
-        >
-          <div className="card-premium relative grid aspect-[4/5] place-items-center overflow-hidden">
-            <div className="absolute -left-16 -top-16 h-52 w-52 rounded-full bg-morado/20 blur-3xl" />
-            <div className="absolute -bottom-16 -right-16 h-52 w-52 rounded-full bg-naranja/20 blur-3xl" />
-            <div className="relative flex flex-col items-center gap-3 text-mist">
-              <ImageIcon className="h-10 w-10 text-morado-light" />
-              <p className="text-sm">Espacio para foto principal</p>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

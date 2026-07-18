@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Oswald, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { AnimatedBackground } from "@/components/layout/AnimatedBackground";
 import { Navbar } from "@/components/layout/Navbar";
@@ -20,6 +20,22 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   display: "swap",
   weight: ["500", "600", "700"],
+});
+
+// Oswald → estilo Clásico (rótulo vintage condensado)
+const oswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+// Bebas Neue → estilo Urbano (display bold condensado)
+const bebas = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas",
+  display: "swap",
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -57,7 +73,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      className={`${inter.variable} ${playfair.variable} ${oswald.variable} ${bebas.variable}`}
+    >
       <body className="min-h-screen antialiased">
         {/* Aplica el tema guardado antes de pintar (evita parpadeo) */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />

@@ -3,9 +3,9 @@ import { Reveal } from "@/components/ui/Reveal";
 // Cifras destacadas. Ajústalas a los datos reales del negocio.
 const stats = [
   { value: "+10", label: "Años de experiencia" },
-  { value: "100%", label: "Clientes satisfechos" },
+  { value: "+5 mil", label: "Cortes realizados" },
   { value: "6", label: "Servicios disponibles" },
-  { value: "★ 5.0", label: "Calificación" },
+  { value: "★ 4.9", label: "Calificación" },
 ];
 
 export function TrustBar() {

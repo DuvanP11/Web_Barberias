@@ -20,10 +20,10 @@ export function AnimatedBackground() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-ink print:hidden"
+      className="site-bg pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-ink print:hidden"
     >
-      {/* Degradado base */}
-      <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(139,92,246,0.12),transparent),radial-gradient(900px_500px_at_100%_10%,rgba(251,122,30,0.08),transparent)]" />
+      {/* Degradado base neutro (el color lo aportan los blobs, según el estilo) */}
+      <div className="absolute inset-0 bg-[radial-gradient(1200px_600px_at_50%_-10%,rgba(255,255,255,0.04),transparent)]" />
 
       {/* Blobs de color flotantes (acento primario / secundario) */}
       <motion.div

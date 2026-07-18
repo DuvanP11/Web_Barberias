@@ -1,4 +1,5 @@
-import { Target, Eye, Building2, BadgeCheck, ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { Target, Eye, Building2, BadgeCheck } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { siteConfig } from "@/lib/site-config";
@@ -14,20 +15,23 @@ export function About() {
       <div className="container-app">
         <SectionHeading
           eyebrow="Quiénes somos"
-          title="Un poco sobre nosotros"
-          subtitle="Cuenta la historia del negocio: quiénes son, qué los mueve y qué los diferencia."
+          title="Sobre la barbería"
+          subtitle="Una barbería con oficio, donde cada cliente sale sintiéndose como su mejor versión."
         />
 
         {/* Historia + imagen */}
         <div className="mt-14 grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
             <div className="relative overflow-hidden rounded-[2rem] border border-line">
-              <div className="relative grid aspect-[4/3] place-items-center bg-ink-soft/60">
-                <div className="absolute inset-0 bg-gradient-to-br from-morado/10 to-naranja/10" />
-                <div className="relative flex flex-col items-center gap-2 text-mist">
-                  <ImageIcon className="h-9 w-9 text-morado-light" />
-                  <p className="text-sm">Espacio para foto del local o el equipo</p>
-                </div>
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/nosotros/local.jpg"
+                  alt={`Interior de ${siteConfig.name}`}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
               </div>
             </div>
           </Reveal>
@@ -40,20 +44,22 @@ export function About() {
               <h3 className="mt-5 font-display text-2xl font-semibold text-cloud">Nuestra historia</h3>
               <div className="mt-4 space-y-4 leading-relaxed text-mist">
                 <p>
-                  Escribe aquí un par de párrafos sobre cómo nació {siteConfig.name}, qué buscan
-                  ofrecer y por qué los clientes confían en el negocio.
+                  {siteConfig.name} nació del gusto por la barbería de siempre: la navaja, la toalla
+                  caliente y la conversación de barrio. Con los años sumamos las tendencias de hoy
+                  para darte lo mejor de ambos mundos.
                 </p>
                 <p>
-                  Un segundo párrafo puede hablar del compromiso con la calidad, la atención cercana
-                  y la experiencia del equipo.
+                  Nuestro equipo cuida cada detalle, desde el degradado hasta el perfilado de la
+                  barba, para que salgas sintiéndote renovado. Aquí no atendemos clientes de paso:
+                  cultivamos habituales.
                 </p>
               </div>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {[
-                  "Atención personalizada",
-                  "Profesionales capacitados",
-                  "Ambiente cómodo",
-                  "+10 años de experiencia",
+                  "Barberos con experiencia",
+                  "Afeitado clásico a navaja",
+                  "Ambiente y buena música",
+                  "+10 años de oficio",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-cloud">
                     <BadgeCheck className="h-4 w-4 shrink-0 text-morado-light" /> {f}
@@ -73,8 +79,8 @@ export function About() {
               </div>
               <h3 className="mt-5 font-display text-xl font-semibold text-cloud">Misión</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Describe el propósito del negocio: qué ofrece, a quién y con qué compromiso de
-                calidad y servicio.
+                Brindar cortes y arreglos de barba de la más alta calidad en un ambiente cercano,
+                cuidando cada detalle para que cada cliente se vaya sintiéndose seguro y a gusto.
               </p>
             </div>
           </Reveal>
@@ -86,8 +92,8 @@ export function About() {
               </div>
               <h3 className="mt-5 font-display text-xl font-semibold text-cloud">Visión</h3>
               <p className="mt-3 text-sm leading-relaxed text-mist">
-                Describe hacia dónde quiere llegar el negocio en los próximos años y cómo quiere que
-                lo recuerden sus clientes.
+                Ser la barbería de referencia de la zona, reconocida por su oficio, su ambiente y
+                por convertir cada visita en una experiencia que los clientes quieran repetir.
               </p>
             </div>
           </Reveal>

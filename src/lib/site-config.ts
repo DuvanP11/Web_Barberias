@@ -1,5 +1,5 @@
 /**
- * Configuración central del sitio — PLANTILLA.
+ * Configuración central del sitio — DATOS DE EJEMPLO (Barbería).
  *
  * Este es el ÚNICO archivo con los datos del negocio: cambiar el WhatsApp, el
  * nombre o los servicios debe ser editar aquí, no buscar por todo el proyecto.
@@ -7,59 +7,59 @@
  * Regla: si un dato del negocio aparece escrito dentro de un componente, está
  * mal puesto — su sitio es este archivo.
  *
- * >>> Reemplaza los valores marcados con « ... » por los reales del cliente. <<<
+ * >>> Los valores de abajo son de EJEMPLO. Reemplázalos por los reales. <<<
  */
 
 export const siteConfig = {
-  name: "Tu Negocio",
-  slogan: "Tu eslogan corto aquí",
+  name: "Barbería Imperio",
+  slogan: "Tradición y estilo en cada corte",
   description:
-    "Descripción breve del negocio en una frase. Se usa en la metadata y en los buscadores.",
-  tagline: "Una frase que resuma la promesa del negocio.",
+    "Barbería clásica en Bogotá: cortes de cabello, arreglo de barba y afeitado tradicional a navaja, con atención personalizada.",
+  tagline: "Donde tu estilo cobra vida.",
 
   // Contacto
   whatsapp: {
     // Formato internacional, SOLO dígitos (sin "+" ni espacios): así lo quiere wa.me.
-    number: "573000000000",
+    number: "573001234567",
     // Como se le muestra a una persona.
-    display: "300 000 0000",
+    display: "300 123 4567",
   },
-  email: "contacto@tunegocio.com",
+  email: "citas@barberiaimperio.com",
 
   // Ubicación
   address: {
-    street: "« Dirección »",
-    neighborhood: "« Barrio / zona »",
+    street: "Calle 85 #12-34, Local 2",
+    neighborhood: "Chapinero",
     city: "Bogotá D.C.",
     country: "Colombia",
     // Consulta para el mapa embebido del footer.
-    mapQuery: "Bogotá, Colombia",
+    mapQuery: "Calle 85 #12-34, Chapinero, Bogotá",
   },
 
-  schedule: "Lunes a Sábado, 9:00 a.m. a 7:00 p.m.",
+  schedule: "Martes a Domingo, 9:00 a.m. a 8:00 p.m.",
 
   // Redes sociales. Deja el string vacío para NO pintar el icono: un enlace que
   // no lleva a ningún lado se lee como descuido.
   social: {
     facebook: "",
-    instagram: "",
+    instagram: "https://instagram.com/barberiaimperio",
   },
 
   // URL pública del sitio (para SEO / Open Graph). Sin barra final.
-  url: "https://www.tunegocio.com",
+  url: "https://www.barberiaimperio.com",
 
   /**
-   * Servicios que ofrece el negocio. Alimentan la sección "Servicios" de la
-   * home y el selector del formulario de contacto. Ajusta la lista al negocio
-   * real (para una barbería: Corte de cabello, Barba, Corte + barba, etc.).
+   * Servicios que ofrece la barbería. Alimentan la sección "Servicios" de la
+   * home y el selector del formulario de agenda. Agrega un campo `price` si
+   * quieres mostrar precios.
    */
   services: [
-    { title: "Servicio 1", text: "Describe aquí en qué consiste este servicio." },
-    { title: "Servicio 2", text: "Describe aquí en qué consiste este servicio." },
-    { title: "Servicio 3", text: "Describe aquí en qué consiste este servicio." },
-    { title: "Servicio 4", text: "Describe aquí en qué consiste este servicio." },
-    { title: "Servicio 5", text: "Describe aquí en qué consiste este servicio." },
-    { title: "Servicio 6", text: "Describe aquí en qué consiste este servicio." },
+    { title: "Corte de cabello", text: "Corte clásico o moderno adaptado a tu estilo, con acabado a navaja." },
+    { title: "Arreglo de barba", text: "Perfilado, recorte y diseño de barba con toalla caliente." },
+    { title: "Corte + barba", text: "El combo completo: cabello y barba impecables en una sola cita." },
+    { title: "Afeitado clásico", text: "Afeitado tradicional a navaja con toalla caliente y aceites." },
+    { title: "Corte infantil", text: "Cortes para los más pequeños, con paciencia y buena onda." },
+    { title: "Diseños y líneas", text: "Líneas, degradados y diseños personalizados a mano alzada." },
   ],
 } as const;
 

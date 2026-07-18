@@ -42,8 +42,8 @@ export function WhyUs() {
       <div className="container-app">
         <SectionHeading
           eyebrow="¿Por qué elegirnos?"
-          title="Calidad, confianza y buen trato"
-          subtitle="Resume aquí lo que hace especial al negocio y por qué los clientes vuelven."
+          title="Más que un corte, una experiencia"
+          subtitle="Oficio, ambiente y buen trato: esto es lo que hace que nuestros clientes siempre vuelvan."
         />
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

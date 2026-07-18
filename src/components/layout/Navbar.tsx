@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
@@ -57,6 +57,12 @@ export function Navbar() {
         </ul>
 
         <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <Link
+            href="/ingresar"
+            className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm text-mist transition-colors hover:bg-white/[0.05] hover:text-cloud"
+          >
+            <LogIn className="h-4 w-4" /> Ingresar
+          </Link>
           <Button href="/cotizar" variant="outline" size="sm">
             Agendar
           </Button>
@@ -108,6 +114,15 @@ export function Navbar() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/ingresar"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-2 rounded-xl px-4 py-3 text-base text-cloud transition-colors hover:bg-white/[0.05]"
+                >
+                  <LogIn className="h-4 w-4" /> Ingresar
+                </Link>
+              </li>
               <li className="mt-2 flex gap-2 px-1">
                 <Button href="/cotizar" variant="outline" size="sm" className="flex-1" onClick={() => setOpen(false)}>
                   Agendar

@@ -1,42 +1,43 @@
 @import "tailwindcss";
 
 /* =========================================================================
-   Sistema de diseño — PLANTILLA
-   Paleta base: Negro (#111111) + acento primario/secundario tematizables.
-   Tokens de Tailwind v4 declarados con @theme. Todo el color sale de variables
-   CSS: se retiñe el sitio (modo y acento) sin tocar componentes.
+   Sistema de diseño — Barbería (multi-estilo)
+   Dos ejes en <html>:  data-theme (claro/oscuro)  ·  data-style (estilo visual)
+   El ESTILO reescribe tipografía, superficies, radios, tarjetas, fondo y
+   motivos. Los nombres de token "morado"/"naranja" son solo el acento
+   primario/secundario; su valor cambia por estilo.
    ========================================================================= */
 
 @theme {
-  /* Superficies (base negra y capas) */
-  --color-ink: #111111;
-  --color-ink-soft: #17171a;
-  --color-surface: #1b1b20;
-  --color-surface-2: #232329;
-  --color-line: #2c2c34;
+  /* Superficies (valores por defecto = estilo Premium oscuro) */
+  --color-ink: #0c0c0d;
+  --color-ink-soft: #111113;
+  --color-surface: #151517;
+  --color-surface-2: #1b1b1e;
+  --color-line: #28282c;
 
-  /* Acento primario (por defecto morado) */
-  --color-morado: #8b5cf6;
-  --color-morado-light: #c4b5fd;
-  --color-morado-dark: #6d28d9;
+  /* Acento primario (oro) */
+  --color-morado: #c9a227;
+  --color-morado-light: #e6c877;
+  --color-morado-dark: #8a6d15;
 
-  /* Acento secundario (por defecto naranja) */
-  --color-naranja: #fb7a1e;
-  --color-naranja-light: #fdba74;
-  --color-naranja-dark: #ea580c;
+  /* Acento secundario */
+  --color-naranja: #b7893a;
+  --color-naranja-light: #dcb877;
+  --color-naranja-dark: #846128;
 
   /* Neutros de texto */
-  --color-cloud: #f5f5f6; /* gris claro / casi blanco */
-  --color-mist: #a1a1aa; /* texto atenuado */
-  --color-mist-2: #71717a;
+  --color-cloud: #f4f2ee;
+  --color-mist: #a7a29a;
+  --color-mist-2: #726c64;
 
-  /* Tipografía */
+  /* Tipografía — la display la fija cada estilo con --font-display */
   --font-display: var(--font-playfair), Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-  /* Radios */
-  --radius-xl: 1.25rem;
-  --radius-2xl: 1.75rem;
+  /* Radios (los sobrescribe cada estilo) */
+  --radius-xl: 0.85rem;
+  --radius-2xl: 1.15rem;
 
   /* Animaciones */
   --animate-float: float 8s ease-in-out infinite;
@@ -49,33 +50,21 @@
   0%, 100% { transform: translateY(0) translateX(0); }
   50% { transform: translateY(-24px) translateX(12px); }
 }
-
-@keyframes shine {
-  to { background-position: 200% center; }
-}
-
-/* Rebote suave del botón flotante de WhatsApp */
+@keyframes shine { to { background-position: 200% center; } }
 @keyframes wa-bounce {
   0%, 88%, 100% { transform: translateY(0); }
   92% { transform: translateY(-6px); }
   96% { transform: translateY(-3px); }
 }
-
-/* Onda pulsante detrás del botón flotante */
 @keyframes wa-ping {
   0% { transform: scale(1); opacity: 0.55; }
   70%, 100% { transform: scale(1.7); opacity: 0; }
 }
+@keyframes barber-pole-move { to { background-position: 0 48px; } }
 
 /* ---- Base ---- */
-:root {
-  color-scheme: dark;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
+:root { color-scheme: dark; }
+html { scroll-behavior: smooth; }
 body {
   background-color: var(--color-ink);
   color: var(--color-cloud);
@@ -85,15 +74,8 @@ body {
   overflow-x: hidden;
 }
 
-/* Opciones de <select> legibles: fondo oscuro y texto claro
-   (evita el "texto invisible" cuando el select tiene fondo translúcido). */
-select option,
-select optgroup {
-  background-color: #1b1b20;
-  color: #f5f5f6;
-}
+select option, select optgroup { background-color: #151517; color: #f4f2ee; }
 
-/* Barra de desplazamiento sutil */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-ink); }
 ::-webkit-scrollbar-thumb {
@@ -102,25 +84,15 @@ select optgroup {
   border: 2px solid var(--color-ink);
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-morado-dark); }
-
-/* Selección de texto */
-::selection {
-  background: var(--color-morado);
-  color: white;
-}
+::selection { background: var(--color-morado); color: #fff; }
 
 /* ---- Utilidades de marca ---- */
-
-/* Título en color de texto principal con detalle en el acento.
-   Usa var(--color-cloud) (no blanco fijo) para que en modo claro el texto se
-   oscurezca y siga legible; el remate hereda el acento activo. */
 .text-gradient-morado {
   background: linear-gradient(120deg, var(--color-cloud) 0%, var(--color-cloud) 55%, var(--color-morado-light) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-
 .text-gradient-brand {
   background: linear-gradient(120deg, var(--color-morado-light), var(--color-naranja-light));
   -webkit-background-clip: text;
@@ -128,7 +100,6 @@ select optgroup {
   color: transparent;
 }
 
-/* Tarjeta premium con borde suave y sombra */
 .card-premium {
   background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-ink-soft) 100%);
   border: 1px solid var(--color-line);
@@ -136,153 +107,153 @@ select optgroup {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 20px 40px -24px rgba(0, 0, 0, 0.8);
 }
 
-/* Resplandor sutil */
 .glow-morado { box-shadow: 0 0 80px -20px var(--color-morado); }
 .glow-naranja { box-shadow: 0 0 80px -20px var(--color-naranja); }
 
-/* Contenedor centrado estándar */
 .container-app {
   width: 100%;
-  max-width: 80rem; /* 1280px */
+  max-width: 80rem;
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
-@media (min-width: 768px) {
-  .container-app { padding-inline: 2rem; }
+@media (min-width: 768px) { .container-app { padding-inline: 2rem; } }
+
+/* Opacidad del fondo animado, controlada por cada estilo */
+.site-bg { opacity: var(--site-bg-opacity, 1); transition: opacity 0.4s ease; }
+
+/* Poste de barbería — motivo solo del estilo Clásico */
+.barber-pole {
+  display: none;
+  height: 8px;
+  border-radius: 9999px;
+  background: repeating-linear-gradient(
+    45deg,
+    #b21f2d 0 12px,
+    #f5f5f5 12px 24px,
+    #1e3a8a 24px 36px,
+    #f5f5f5 36px 48px
+  );
+  background-size: auto 48px;
 }
 
 /* =========================================================================
-   TEMATIZACIÓN EN VIVO
-   El sitio se retiñe cambiando variables CSS bajo [data-theme] / [data-accent]
-   en <html> (lo gestiona el ThemeProvider). Como las utilidades de Tailwind v4
-   referencian estas variables (p. ej. .bg-ink → var(--color-ink)), basta con
-   sobrescribirlas para recolorear todo sin tocar los componentes.
+   ESTILOS (data-style) — cada uno redefine tokens + tratamiento
    ========================================================================= */
 
-/* ---- Modo CLARO: se invierten superficies y texto ---- */
-:root[data-theme="light"] {
-  color-scheme: light;
+/* ---- PREMIUM: lujo, serif, pocos colores, mucho aire ---- */
+:root[data-style="premium"] {
+  --font-display: var(--font-playfair), Georgia, serif;
+  --color-ink: #0c0c0d; --color-ink-soft: #111113; --color-surface: #151517; --color-surface-2: #1b1b1e; --color-line: #28282c;
+  --color-cloud: #f4f2ee; --color-mist: #a7a29a; --color-mist-2: #726c64;
+  --color-morado: #c9a227; --color-morado-light: #e6c877; --color-morado-dark: #8a6d15;
+  --color-naranja: #b7893a; --color-naranja-light: #dcb877; --color-naranja-dark: #846128;
+  --radius-xl: 0.85rem; --radius-2xl: 1.15rem;
+  --site-bg-opacity: 0.55;
+}
+:root[data-style="premium"] .card-premium { box-shadow: 0 30px 60px -42px rgba(0, 0, 0, 0.9); }
+:root[data-style="premium"] .font-display { letter-spacing: 0.005em; }
 
-  --color-ink: #f5f5f7;      /* fondo de página */
-  --color-ink-soft: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-2: #f0f0f4;
-  /* Más marcada que en oscuro: sobre fondos casi blancos una línea de #e2e2e8
-     no llega a leerse y las tarjetas quedan flotando sin contorno. */
-  --color-line: #d4d4de;
+/* ---- CLÁSICO: negro/dorado/madera/cuero, tipografía vintage ---- */
+:root[data-style="clasico"] {
+  --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+  --color-ink: #14100c; --color-ink-soft: #1a140d; --color-surface: #211910; --color-surface-2: #291f14; --color-line: #3c2e1f;
+  --color-cloud: #f2e8d6; --color-mist: #c2b096; --color-mist-2: #8a785e;
+  --color-morado: #c9a23a; --color-morado-light: #ecc766; --color-morado-dark: #8a6a17;
+  --color-naranja: #9a4230; --color-naranja-light: #c9704f; --color-naranja-dark: #5e281c;
+  --radius-xl: 0.4rem; --radius-2xl: 0.55rem;
+  --site-bg-opacity: 0.85;
+}
+:root[data-style="clasico"] .card-premium {
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-ink) 100%);
+  box-shadow: inset 0 0 0 1px rgba(201, 162, 58, 0.14), 0 22px 44px -28px rgba(0, 0, 0, 0.85);
+}
+:root[data-style="clasico"] .font-display { text-transform: uppercase; letter-spacing: 0.05em; }
+:root[data-style="clasico"] .barber-pole { display: block; animation: barber-pole-move 1.6s linear infinite; }
 
-  /* El texto se oscurece para mantener contraste sobre fondos claros */
-  --color-cloud: #191920;    /* texto principal */
-  --color-mist: #52525b;     /* texto atenuado */
-  --color-mist-2: #6b6b74;
+/* ---- URBANO: neón, colores fuertes, tipografía bold ---- */
+:root[data-style="urbano"] {
+  --font-display: var(--font-bebas), Impact, sans-serif;
+  --color-ink: #0a0a0f; --color-ink-soft: #0e0e15; --color-surface: #14141d; --color-surface-2: #1b1b26; --color-line: #2b2b3a;
+  --color-cloud: #f6f6fb; --color-mist: #a2a2b8; --color-mist-2: #6d6d84;
+  --color-morado: #ff2d7e; --color-morado-light: #ff7ab0; --color-morado-dark: #c40060;
+  --color-naranja: #18d9d9; --color-naranja-light: #7ff0f0; --color-naranja-dark: #0f9a9a;
+  --radius-xl: 0.6rem; --radius-2xl: 0.9rem;
+  --site-bg-opacity: 1;
+}
+:root[data-style="urbano"] .card-premium {
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px rgba(255, 45, 126, 0.18), 0 20px 44px -22px rgba(255, 45, 126, 0.28);
+}
+:root[data-style="urbano"] .font-display { text-transform: uppercase; letter-spacing: 0.02em; }
+:root[data-style="urbano"] h1.font-display,
+:root[data-style="urbano"] h2.font-display {
+  text-shadow: 0 0 20px rgba(255, 45, 126, 0.45), 0 0 6px rgba(255, 45, 126, 0.35);
 }
 
-/* Ajustes de superficies “premium” en claro (sombras y brillos suaves) */
+/* ---- MINIMALISTA: plano, monocromo, mucho blanco ---- */
+:root[data-style="minimalista"] {
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #0f0f10; --color-ink-soft: #161618; --color-surface: #161618; --color-surface-2: #1e1e20; --color-line: #2a2a2d;
+  --color-cloud: #ededee; --color-mist: #9a9a9f; --color-mist-2: #6a6a70;
+  --color-morado: #52525b; --color-morado-light: #d4d4d8; --color-morado-dark: #3f3f46;
+  --color-naranja: #71717a; --color-naranja-light: #e4e4e7; --color-naranja-dark: #52525b;
+  --radius-xl: 0.5rem; --radius-2xl: 0.7rem;
+  --site-bg-opacity: 0.2;
+}
+:root[data-style="minimalista"] .card-premium { background: var(--color-surface); box-shadow: none; }
+:root[data-style="minimalista"] .font-display { letter-spacing: -0.02em; font-weight: 600; }
+
+/* =========================================================================
+   MODO CLARO — se invierten superficies y texto (por estilo)
+   Va DESPUÉS de los bloques [data-style] para ganarles en modo claro.
+   ========================================================================= */
+
+:root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="light"] .card-premium {
   background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(17, 17, 17, 0.22);
 }
-
-/* Opciones de <select> legibles en modo claro */
-:root[data-theme="light"] select option,
-:root[data-theme="light"] select optgroup {
-  background-color: #ffffff;
-  color: #191920;
+:root[data-theme="light"] select option, :root[data-theme="light"] select optgroup {
+  background-color: #ffffff; color: #191920;
 }
-
-/* ---- PALETAS DE ACENTO ----
-   Cada acento redefine las familias "morado" (primaria) y "naranja"
-   (secundaria), que alimentan botones, degradados, enlaces y realces.
-   El acento por defecto es "morado" (primario → secundario). */
-
-:root[data-accent="morado"] {
-  --color-morado: #8b5cf6;
-  --color-morado-light: #c4b5fd;
-  --color-morado-dark: #6d28d9;
-  --color-naranja: #fb7a1e;
-  --color-naranja-light: #fdba74;
-  --color-naranja-dark: #ea580c;
-}
-
-:root[data-accent="naranja"] {
-  --color-morado: #fb7a1e;
-  --color-morado-light: #fdba74;
-  --color-morado-dark: #ea580c;
-  --color-naranja: #f59e0b;
-  --color-naranja-light: #fcd34d;
-  --color-naranja-dark: #d97706;
-}
-
-:root[data-accent="rosa"] {
-  --color-morado: #e84d6f;
-  --color-morado-light: #f9a8be;
-  --color-morado-dark: #c2325a;
-  --color-naranja: #fb7185;
-  --color-naranja-light: #fda4b3;
-  --color-naranja-dark: #e11d48;
-}
-
-:root[data-accent="celeste"] {
-  --color-morado: #2b9fe0;
-  --color-morado-light: #7dd3fc;
-  --color-morado-dark: #0a6fb0;
-  --color-naranja: #38bdf8;
-  --color-naranja-light: #bae6fd;
-  --color-naranja-dark: #0284c7;
-}
-
-:root[data-accent="gris"] {
-  --color-morado: #64748b;
-  --color-morado-light: #cbd5e1;
-  --color-morado-dark: #475569;
-  --color-naranja: #94a3b8;
-  --color-naranja-light: #e2e8f0;
-  --color-naranja-dark: #64748b;
-}
-
-/* ---- ACENTOS EN MODO CLARO ----
-   Los tonos "-light" de cada familia están pensados para contrastar contra el
-   fondo negro; sobre una superficie blanca quedan en 1.3:1 y desaparecen. En
-   claro se sustituyen por el tono oscuro de la misma familia, que es el que da
-   contraste contra la superficie: así los remates de título (.text-gradient-*),
-   los eyebrows, los íconos y los números vuelven a leerse sin tocar los
-   componentes.
-
-   El selector combina tema + acento a propósito: los bloques [data-accent] de
-   arriba tienen la misma especificidad que [data-theme] y van después, así que
-   ganarían. Con los dos atributos juntos la especificidad sube y estos mandan. */
-
-:root[data-theme="light"][data-accent="morado"] {
-  --color-morado-light: #6d28d9;
-  --color-naranja-light: #c2410c;
-}
-
-:root[data-theme="light"][data-accent="naranja"] {
-  --color-morado-light: #c2410c;
-  --color-naranja-light: #b45309;
-}
-
-:root[data-theme="light"][data-accent="rosa"] {
-  --color-morado-light: #c2325a;
-  --color-naranja-light: #be123c;
-}
-
-:root[data-theme="light"][data-accent="celeste"] {
-  --color-morado-light: #0a6fb0;
-  --color-naranja-light: #0369a1;
-}
-
-:root[data-theme="light"][data-accent="gris"] {
-  --color-morado-light: #475569;
-  --color-naranja-light: #52525b;
-}
-
-/* Los degradados de texto de marca reparten dos tonos claros; en modo claro se
-   anclan a la pareja primaria/oscura para que el remate del título tenga cuerpo. */
 :root[data-theme="light"] .text-gradient-brand {
   background: linear-gradient(120deg, var(--color-morado-dark), var(--color-naranja-dark));
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+/* Premium claro — marfil cálido */
+:root[data-theme="light"][data-style="premium"] {
+  --color-ink: #f6f4ef; --color-ink-soft: #ffffff; --color-surface: #ffffff; --color-surface-2: #f1efe8; --color-line: #e4ded2;
+  --color-cloud: #1a1712; --color-mist: #6a6258; --color-mist-2: #8f877b;
+  --color-morado-light: #8a6d15; --color-naranja-light: #846128;
+}
+
+/* Clásico claro — papel/crema */
+:root[data-theme="light"][data-style="clasico"] {
+  --color-ink: #f3ece0; --color-ink-soft: #fbf7ef; --color-surface: #fbf7ef; --color-surface-2: #f0e7d6; --color-line: #d8cbb4;
+  --color-cloud: #211a12; --color-mist: #6f6250; --color-mist-2: #94856c;
+  --color-morado-light: #8a6a17; --color-naranja-light: #5e281c;
+}
+
+/* Urbano claro — blanco con neón */
+:root[data-theme="light"][data-style="urbano"] {
+  --color-ink: #f4f4f8; --color-ink-soft: #ffffff; --color-surface: #ffffff; --color-surface-2: #eeeef4; --color-line: #e2e2ea;
+  --color-cloud: #14141d; --color-mist: #55556a; --color-mist-2: #8a8aa0;
+  --color-morado-light: #c40060; --color-naranja-light: #0f9a9a;
+}
+:root[data-theme="light"][data-style="urbano"] h1.font-display,
+:root[data-theme="light"][data-style="urbano"] h2.font-display { text-shadow: none; }
+
+/* Minimalista claro — blanco puro, near-black */
+:root[data-theme="light"][data-style="minimalista"] {
+  --color-ink: #ffffff; --color-ink-soft: #ffffff; --color-surface: #ffffff; --color-surface-2: #f4f4f5; --color-line: #e4e4e7;
+  --color-cloud: #111114; --color-mist: #52525b; --color-mist-2: #8a8a90;
+  --color-morado: #3f3f46; --color-morado-light: #27272a; --color-morado-dark: #18181b;
+  --color-naranja: #52525b; --color-naranja-light: #3f3f46; --color-naranja-dark: #27272a;
+}
+:root[data-theme="light"][data-style="minimalista"] .card-premium {
+  background: #ffffff; box-shadow: none; border-color: var(--color-line);
 }
 
 /* Respeta usuarios con movimiento reducido */

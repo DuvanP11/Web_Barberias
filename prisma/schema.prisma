@@ -1,0 +1,191 @@
+// =============================================================================
+//  Fundación SaaS Barberías — esquema MULTI-TENANT
+//
+//  Una sola instalación administra varias barberías (Tenant). Cada dato del
+//  dominio cuelga de un `tenantId`, así los negocios quedan aislados entre sí.
+//
+//  Provider = sqlite en desarrollo (corre sin infraestructura). El esquema es
+//  PORTABLE a PostgreSQL para producción: no usa enums nativos ni tipos
+//  específicos; los roles y estados son String validados en la app
+//  (ver src/lib/rbac.ts). Para producción: cambia el provider a "postgresql" y
+//  apunta DATABASE_URL a Neon; el esquema no requiere más cambios.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Barbería (inquilino). La raíz del aislamiento multi-tenant.
+model Tenant {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  logo         String?
+  primaryColor String? // acento de marca (hex)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  users        User[]
+  locations    Location[]
+  services     Service[]
+  barbers      BarberProfile[]
+  appointments Appointment[]
+  reviews      Review[]
+}
+
+/// Usuario del sistema. `role` = CLIENT | BARBER | ADMIN | OWNER (ver rbac.ts).
+model User {
+  id            String    @id @default(cuid())
+  tenantId      String
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  role          String    @default("CLIENT")
+  firstName     String
+  lastName      String
+  email         String
+  phone         String?
+  passwordHash  String
+  birthDate     DateTime?
+  address       String?
+  avatar        String?
+  emailVerified DateTime?
+  active        Boolean   @default(true)
+  points        Int       @default(0) // fidelización
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  barberProfile        BarberProfile?
+  appointmentsAsClient Appointment[]       @relation("ClientAppointments")
+  reviewsAuthored      Review[]            @relation("ReviewAuthor")
+  tokens               VerificationToken[]
+
+  // Email único DENTRO de cada barbería (el mismo correo puede existir en otra).
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+/// Sede física de una barbería.
+model Location {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  address   String?
+  phone     String?
+  whatsapp  String?
+  mapQuery  String?
+  schedule  String?
+  parking   Boolean  @default(false)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@index([tenantId])
+}
+
+/// Servicio ofrecido (corte, barba, combo…).
+model Service {
+  id          String   @id @default(cuid())
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  priceCents  Int      @default(0)
+  durationMin Int      @default(30)
+  image       String?
+  category    String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@index([tenantId])
+}
+
+/// Perfil público y profesional de un barbero (1:1 con un User de rol BARBER).
+model BarberProfile {
+  id              String   @id @default(cuid())
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty       String?
+  experienceYears Int?
+  bio             String?
+  rating          Float    @default(0)
+  totalCuts       Int      @default(0)
+  commissionPct   Int      @default(50) // % de comisión por servicio
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  appointments Appointment[] @relation("BarberAppointments")
+  reviews      Review[]      @relation("ReviewBarber")
+
+  @@index([tenantId])
+}
+
+/// Cita. `status` = PENDING | CONFIRMED | COMPLETED | CANCELLED (ver rbac.ts).
+model Appointment {
+  id         String   @id @default(cuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id])
+  clientId   String
+  client     User     @relation("ClientAppointments", fields: [clientId], references: [id])
+  barberId   String
+  barber     BarberProfile @relation("BarberAppointments", fields: [barberId], references: [id])
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id])
+  startAt    DateTime
+  endAt      DateTime
+  status     String   @default("PENDING")
+  priceCents Int      @default(0)
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([tenantId])
+  @@index([barberId, startAt])
+  @@index([clientId])
+}
+
+/// Reseña de un cliente (opcionalmente sobre un barbero).
+model Review {
+  id        String        @id @default(cuid())
+  tenantId  String
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User          @relation("ReviewAuthor", fields: [authorId], references: [id])
+  barberId  String?
+  barber    BarberProfile? @relation("ReviewBarber", fields: [barberId], references: [id])
+  rating    Int
+  comment   String?
+  approved  Boolean       @default(false)
+  createdAt DateTime      @default(now())
+
+  @@index([tenantId])
+}
+
+/// Token de verificación de correo / restablecimiento de contraseña.
+/// `type` = EMAIL_VERIFY | PASSWORD_RESET.
+model VerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  type      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

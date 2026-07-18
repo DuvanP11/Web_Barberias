@@ -1,6 +1,8 @@
+import Image from "next/image";
 import { Star, Quote, ImageIcon } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { WORK_IMAGES } from "@/lib/gallery";
 
 /**
  * REFERENCIAS Y CALIFICACIONES — plantilla (sin base de datos, sin fotos).
@@ -11,13 +13,11 @@ import { Reveal } from "@/components/ui/Reveal";
  */
 
 const TESTIMONIALS = [
-  { comment: "Aquí va una reseña real de un cliente satisfecho.", author: "Nombre del cliente", rating: 5 },
-  { comment: "Un segundo testimonio breve que transmita confianza.", author: "Nombre del cliente", rating: 5 },
-  { comment: "Un tercer comentario destacando el servicio recibido.", author: "Nombre del cliente", rating: 5 },
+  { comment: "El mejor fade que me han hecho en Bogotá. Vuelvo sin duda.", author: "Andrés M.", rating: 5 },
+  { comment: "Ambiente increíble y la barba me quedó perfecta. Muy recomendados.", author: "Carlos R.", rating: 5 },
+  { comment: "Puntuales, profesionales y a buen precio. Ya soy cliente fijo.", author: "Julián P.", rating: 5 },
 ];
 
-// Número de marcos de la galería (reemplaza cada uno por una foto real).
-const GALLERY_SLOTS = 6;
 
 export function SocialProof() {
   return (
@@ -37,8 +37,8 @@ export function SocialProof() {
                 <Star key={i} className="h-6 w-6 fill-naranja text-naranja" />
               ))}
             </div>
-            <p className="font-display text-4xl font-semibold text-cloud">5.0</p>
-            <p className="text-sm text-mist">Calificación promedio · reemplaza con tus datos reales</p>
+            <p className="font-display text-4xl font-semibold text-cloud">4.9</p>
+            <p className="text-sm text-mist">Calificación promedio · +200 reseñas de clientes</p>
           </div>
         </Reveal>
 
@@ -75,13 +75,16 @@ export function SocialProof() {
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: GALLERY_SLOTS }).map((_, i) => (
-              <Reveal key={i} delay={(i % 3) * 0.06}>
-                <figure className="card-premium grid aspect-[3/4] place-items-center overflow-hidden">
-                  <div className="flex flex-col items-center gap-2 text-mist">
-                    <ImageIcon className="h-8 w-8 text-morado-light/70" />
-                    <figcaption className="text-xs">Foto próximamente</figcaption>
-                  </div>
+            {WORK_IMAGES.map((src, i) => (
+              <Reveal key={src} delay={(i % 3) * 0.06}>
+                <figure className="card-premium group relative aspect-[3/4] overflow-hidden">
+                  <Image
+                    src={src}
+                    alt={`Trabajo realizado ${i + 1}`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </figure>
               </Reveal>
             ))}
