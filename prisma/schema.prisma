@@ -12,12 +12,15 @@
 // =============================================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" para desarrollo local; "rhel-openssl-3.0.x" para el runtime de Vercel.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // conexión pooled (runtime)
+  directUrl = env("DIRECT_URL") // conexión directa (migraciones / db push)
 }
 
 /// Barbería (inquilino). La raíz del aislamiento multi-tenant.
