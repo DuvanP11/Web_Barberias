@@ -42,7 +42,7 @@ export default async function ComprobantePage({ params }: { params: Promise<{ id
           <div className="mt-6 border-t border-line pt-6">
             <p className="text-xs uppercase tracking-wider text-mist-2">Comprobante</p>
             <p className="font-display text-xl font-semibold text-cloud">{payment.reference}</p>
-            <p className="mt-1 text-sm text-mist">{new Date(payment.createdAt).toLocaleString("es-CO")}</p>
+            <p className="mt-1 text-sm text-mist">{new Date(payment.createdAt).toLocaleString("es-CO", { timeZone: "America/Bogota" })}</p>
           </div>
 
           <dl className="mt-6 space-y-3 border-t border-line pt-6 text-sm">

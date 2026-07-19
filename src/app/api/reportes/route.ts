@@ -9,7 +9,7 @@ function csv(rows: (string | number)[][]) {
     .join("\r\n");
 }
 const money = (cents: number) => (cents / 100).toFixed(0);
-const date = (d: Date) => new Date(d).toLocaleString("es-CO");
+const date = (d: Date) => new Date(d).toLocaleString("es-CO", { timeZone: "America/Bogota" });
 
 export async function GET(request: Request) {
   const session = await getSession();

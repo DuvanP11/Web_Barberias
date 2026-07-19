@@ -34,7 +34,7 @@ export default async function CitasAdminPage() {
           <div key={a.id} className="card-premium flex flex-col gap-3 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="min-w-0 text-sm">
               <p className="font-medium text-cloud">
-                {new Date(a.startAt).toLocaleString("es-CO", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} · {a.service.name} · {formatCOP(a.priceCents / 100)}
+                {new Date(a.startAt).toLocaleString("es-CO", { timeZone: "America/Bogota", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })} · {a.service.name} · {formatCOP(a.priceCents / 100)}
               </p>
               <p className="flex flex-wrap gap-x-4 gap-y-1 text-mist">
                 <span className="inline-flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> {a.client.firstName} {a.client.lastName}</span>

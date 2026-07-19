@@ -76,7 +76,7 @@ export default async function BarberoPanel() {
               {today.map((a) => (
                 <li key={a.id} className="flex items-center gap-3 rounded-xl border border-line/60 bg-surface/30 p-3">
                   <span className="inline-flex items-center gap-1 rounded-lg bg-morado/15 px-2 py-1 text-xs text-morado-light">
-                    <Clock className="h-3 w-3" /> {new Date(a.startAt).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}
+                    <Clock className="h-3 w-3" /> {new Date(a.startAt).toLocaleTimeString("es-CO", { timeZone: "America/Bogota", hour: "2-digit", minute: "2-digit" })}
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-cloud">{a.client.firstName} {a.client.lastName}</p>

@@ -15,6 +15,11 @@ export const CLOSE_HOUR = 20; // 8:00 p.m.
 export const SLOT_STEP_MIN = 30;
 export const CLOSED_WEEKDAY = 1; // lunes (0 = domingo)
 
+// Zona horaria del negocio anclada por desfase fijo (Colombia no tiene horario
+// de verano). Así los cupos son correctos aunque el servidor corra en UTC
+// (Vercel) — no dependemos de la variable de entorno TZ.
+export const TZ_OFFSET = "-05:00";
+
 // Estados que OCUPAN un cupo (una cita cancelada libera el horario).
 const BUSY = [APPOINTMENT_STATUS.PENDING, APPOINTMENT_STATUS.CONFIRMED, APPOINTMENT_STATUS.COMPLETED];
 
@@ -63,34 +68,32 @@ export async function getAvailability(
   });
   if (!service) return [];
 
-  const open = new Date(`${date}T${pad(OPEN_HOUR)}:00:00`);
-  const close = new Date(`${date}T${pad(CLOSE_HOUR)}:00:00`);
-  if (Number.isNaN(open.getTime())) return [];
-  if (open.getDay() === CLOSED_WEEKDAY) return []; // cerrado ese día
+  // Día de la semana de esa fecha (mediodía UTC = misma fecha calendario).
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  if (Number.isNaN(weekday)) return [];
+  if (weekday === CLOSED_WEEKDAY) return []; // cerrado ese día
 
-  const durationMs = service.durationMin * 60000;
-  const stepMs = SLOT_STEP_MIN * 60000;
-  const now = new Date();
+  const durationMin = service.durationMin;
+  const now = Date.now();
 
-  // Citas del barbero ese día (para marcar ocupados sin una consulta por cupo).
-  const dayStart = new Date(`${date}T00:00:00`);
-  const dayEnd = new Date(`${date}T23:59:59`);
+  // Rango del día EN HORA DE COLOMBIA (con el desfase fijo), para filtrar citas.
+  const dayStart = new Date(`${date}T00:00:00${TZ_OFFSET}`);
+  const dayEnd = new Date(`${date}T23:59:59${TZ_OFFSET}`);
   const busy = await prisma.appointment.findMany({
     where: { tenantId, barberId, status: { in: BUSY }, startAt: { gte: dayStart, lte: dayEnd } },
     select: { startAt: true, endAt: true },
   });
 
   const slots: Slot[] = [];
-  for (let t = open.getTime(); t + durationMs <= close.getTime() + 1; t += stepMs) {
-    const start = new Date(t);
-    const end = new Date(t + durationMs);
-    const inFuture = start.getTime() > now.getTime();
+  // Se itera en minutos del reloj de Colombia; el instante real lleva el desfase.
+  for (let m = OPEN_HOUR * 60; m + durationMin <= CLOSE_HOUR * 60; m += SLOT_STEP_MIN) {
+    const h = Math.floor(m / 60);
+    const mm = m % 60;
+    const start = new Date(`${date}T${pad(h)}:${pad(mm)}:00${TZ_OFFSET}`);
+    const end = new Date(start.getTime() + durationMin * 60000);
+    const inFuture = start.getTime() > now;
     const overlaps = busy.some((b) => start < b.endAt && end > b.startAt);
-    slots.push({
-      time: `${pad(start.getHours())}:${pad(start.getMinutes())}`,
-      iso: start.toISOString(),
-      available: inFuture && !overlaps,
-    });
+    slots.push({ time: `${pad(h)}:${pad(mm)}`, iso: start.toISOString(), available: inFuture && !overlaps });
   }
   return slots;
 }

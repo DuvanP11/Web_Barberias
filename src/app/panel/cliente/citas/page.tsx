@@ -13,7 +13,7 @@ const STATUS_META: Record<string, { label: string; className: string }> = {
 };
 
 function fmt(d: Date) {
-  return new Date(d).toLocaleString("es-CO", { weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+  return new Date(d).toLocaleString("es-CO", { timeZone: "America/Bogota", weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 export default async function CitasPage({ searchParams }: { searchParams: Promise<{ ok?: string; cancel?: string }> }) {

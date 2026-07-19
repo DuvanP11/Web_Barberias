@@ -47,10 +47,10 @@ export default async function BarberAgendaPage() {
               <div className="flex items-start gap-4">
                 <span className="inline-flex flex-col items-center rounded-xl bg-morado/15 px-3 py-2 text-morado-light">
                   <Clock className="h-4 w-4" />
-                  <span className="mt-1 text-xs">{new Date(a.startAt).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })}</span>
+                  <span className="mt-1 text-xs">{new Date(a.startAt).toLocaleTimeString("es-CO", { timeZone: "America/Bogota", hour: "2-digit", minute: "2-digit" })}</span>
                 </span>
                 <div className="space-y-1 text-sm">
-                  <p className="capitalize text-cloud">{new Date(a.startAt).toLocaleDateString("es-CO", { weekday: "long", day: "2-digit", month: "long" })}</p>
+                  <p className="capitalize text-cloud">{new Date(a.startAt).toLocaleDateString("es-CO", { timeZone: "America/Bogota", weekday: "long", day: "2-digit", month: "long" })}</p>
                   <p className="flex flex-wrap gap-x-4 gap-y-1 text-mist">
                     <span className="inline-flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> {a.client.firstName} {a.client.lastName}</span>
                     <span className="inline-flex items-center gap-1.5"><Scissors className="h-3.5 w-3.5" /> {a.service.name} · {formatCOP(a.priceCents / 100)}</span>
